@@ -76,14 +76,16 @@ def get_connection_values(response, **kwargs):
     http = credentials.authorize(http)
     api = googleapi.build('plus', 'v1', http=http)
     profile = api.people().get(userId='me').execute()
+    given_name = profile['name']['givenName']
+    family_name = profile['name']['familyName']
 
     return dict(
         provider_id=config['id'],
         provider_user_id=profile['id'],
         access_token=access_token,
         secret=None,
-        display_name=profile['name'],
-        full_name=profile['name'],
+        display_name='%s %s' % (given_name, family_name),
+        full_name='%s %s' % (given_name, family_name),
         profile_url=profile.get('link'),
         image_url=profile.get('picture')
     )
